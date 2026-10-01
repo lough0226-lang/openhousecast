@@ -2,7 +2,8 @@
 
 import Link from 'next/link';
 import { useState } from 'react';
-import { Menu, X, Home } from 'lucide-react';
+import { Menu, X, Home, LogOut } from 'lucide-react';
+import { useSession, signOut } from 'next-auth/react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 
@@ -39,8 +40,134 @@ export function Logo({ light = false }: { light?: boolean }) {
   );
 }
 
+function UserMenu({ light = false }: { light?: boolean }) {
+  const { data: session } = useSession();
+  const user = session?.user;
+
+  if (!user) {
+    return (
+      <>
+        <Button asChild variant="ghost" className="font-medium">
+          <Link href="/auth/login">Log in</Link>
+        </Button>
+        <Button asChild variant="amber" size="lg" className="font-semibold">
+          <Link href="/generate">Get started</Link>
+        </Button>
+      </>
+    );
+  }
+
+  const initial =
+    user.name?.trim()?.charAt(0).toUpperCase() ||
+    user.email?.trim()?.charAt(0).toUpperCase() ||
+    'U';
+
+  return (
+    <>
+      <div
+        className={cn(
+          'flex min-w-0 items-center gap-2.5',
+          light ? 'text-paper' : 'text-evergreen-deep',
+        )}
+      >
+        {user.image ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={user.image}
+            alt={user.name || 'Account'}
+            width={34}
+            height={34}
+            className="size-[34px] shrink-0 rounded-full border border-line object-cover"
+          />
+        ) : (
+          <span className="grid size-[34px] shrink-0 place-items-center rounded-full bg-evergreen text-sm font-semibold text-amber">
+            {initial}
+          </span>
+        )}
+        <span className="hidden max-w-[170px] truncate text-sm font-medium lg:inline">
+          {user.email}
+        </span>
+      </div>
+      <Button
+        type="button"
+        variant="ghost"
+        className="font-medium"
+        onClick={() => signOut({ callbackUrl: '/' })}
+      >
+        <LogOut className="size-4 md:mr-1.5" />
+        <span className="hidden md:inline">Log out</span>
+      </Button>
+    </>
+  );
+}
+
+function MobileAuth({
+  light = false,
+  onNavigate,
+}: {
+  light?: boolean;
+  onNavigate: () => void;
+}) {
+  const { data: session } = useSession();
+  const user = session?.user;
+
+  if (!user) {
+    return (
+      <>
+        <Button asChild variant="ghost" onClick={onNavigate}>
+          <Link href="/auth/login">Log in</Link>
+        </Button>
+        <Button asChild variant="amber" onClick={onNavigate}>
+          <Link href="/generate">Get started</Link>
+        </Button>
+      </>
+    );
+  }
+
+  return (
+    <div
+      className={cn(
+        'flex items-center justify-between gap-3 rounded-lg border px-3 py-2',
+        light ? 'border-white/15 bg-white/5' : 'border-line bg-white',
+      )}
+    >
+      <div
+        className={cn(
+          'flex min-w-0 items-center gap-2.5',
+          light ? 'text-paper' : 'text-evergreen-deep',
+        )}
+      >
+        {user.image ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={user.image}
+            alt={user.name || 'Account'}
+            width={32}
+            height={32}
+            className="size-8 shrink-0 rounded-full border border-line object-cover"
+          />
+        ) : (
+          <span className="grid size-8 shrink-0 place-items-center rounded-full bg-evergreen text-xs font-semibold text-amber">
+            {user.email?.trim()?.charAt(0).toUpperCase() || 'U'}
+          </span>
+        )}
+        <span className="truncate text-sm font-medium">{user.email}</span>
+      </div>
+      <Button
+        type="button"
+        variant="ghost"
+        size="sm"
+        onClick={() => signOut({ callbackUrl: '/' })}
+      >
+        <LogOut className="size-4" />
+      </Button>
+    </div>
+  );
+}
+
 export function SiteHeader({ light = false }: { light?: boolean }) {
   const [open, setOpen] = useState(false);
+  const close = () => setOpen(false);
 
   return (
     <header
@@ -72,12 +199,7 @@ export function SiteHeader({ light = false }: { light?: boolean }) {
         </nav>
 
         <div className="hidden items-center gap-2 md:flex">
-          <Button asChild variant="ghost" className="font-medium">
-            <Link href="/auth/login">Log in</Link>
-          </Button>
-          <Button asChild variant="amber" size="lg" className="font-semibold">
-            <Link href="/generate">Get started</Link>
-          </Button>
+          <UserMenu light={light} />
         </div>
 
         <button
@@ -107,11 +229,11 @@ export function SiteHeader({ light = false }: { light?: boolean }) {
               <Link
                 key={item.label}
                 href={item.href}
-                onClick={() => setOpen(false)}
+                onClick={close}
                 className={cn(
                   'rounded-md px-3 py-2.5 text-sm font-medium',
                   light
-                    ? 'text-paper/85 hover:bg-white/10'
+                    ? 'text-paper/85 hover:text-paper hover:bg-white/10'
                     : 'text-evergreen-deep hover:bg-evergreen/5',
                 )}
               >
@@ -119,12 +241,7 @@ export function SiteHeader({ light = false }: { light?: boolean }) {
               </Link>
             ))}
             <div className="mt-3 flex flex-col gap-2">
-              <Button asChild variant="ghost" onClick={() => setOpen(false)}>
-                <Link href="/auth/login">Log in</Link>
-              </Button>
-              <Button asChild variant="amber" onClick={() => setOpen(false)}>
-                <Link href="/generate">Get started</Link>
-              </Button>
+              <MobileAuth light={light} onNavigate={close} />
             </div>
           </nav>
         </div>
