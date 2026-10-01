@@ -1,13 +1,17 @@
 // Prisma schema for OpenHouseCast
 // Docs: https://pris.ly/d/prisma-schema
+// Application tables live in the dedicated "app" schema so Prisma never touches
+// the Supabase-managed tables in "public" (e.g. the platform-owned health_check).
 
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["multiSchema"]
 }
 
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+  schemas  = ["app"]
 }
 
 // ---------------------------------------------------------------------------
@@ -28,6 +32,8 @@ model User {
   subscription Subscription?
   usages       Usage[]
   scripts      Script[]
+
+  @@schema("app")
 }
 
 model Account {
@@ -48,6 +54,7 @@ model Account {
 
   @@unique([provider, providerAccountId])
   @@index([userId])
+  @@schema("app")
 }
 
 model Session {
@@ -59,6 +66,7 @@ model Session {
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
+  @@schema("app")
 }
 
 model VerificationToken {
@@ -67,6 +75,7 @@ model VerificationToken {
   expires    DateTime
 
   @@unique([identifier, token])
+  @@schema("app")
 }
 
 // ---------------------------------------------------------------------------
@@ -76,11 +85,15 @@ model VerificationToken {
 enum Plan {
   free
   pro
+
+  @@schema("app")
 }
 
 enum SubscriptionStatus {
   active
   inactive
+
+  @@schema("app")
 }
 
 model Subscription {
@@ -94,6 +107,8 @@ model Subscription {
   updatedAt           DateTime           @updatedAt
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@schema("app")
 }
 
 model Usage {
@@ -106,6 +121,7 @@ model Usage {
 
   @@unique([userId, month])
   @@index([userId])
+  @@schema("app")
 }
 
 model Script {
@@ -117,4 +133,5 @@ model Script {
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
+  @@schema("app")
 }
