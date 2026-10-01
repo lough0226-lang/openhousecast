@@ -1,3 +1,4 @@
+import { Suspense } from 'react';
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { Home, Shield } from 'lucide-react';
@@ -66,7 +67,9 @@ export default function LoginPage() {
               </p>
 
               <div className="mt-7">
-                <LoginForm />
+                <Suspense fallback={null}>
+                  <LoginForm />
+                </Suspense>
               </div>
             </div>
           </div>
