@@ -12,19 +12,19 @@ const FREE_FEATURES = [
   '2 long-form scripts per month',
   'Market Update content line',
   'Buyer Education content line',
-  'Full script with timestamps',
+  'Full long-form script with timestamps',
   'Opening hook & CTA',
-  '9-part output for generated scripts',
+  '9-part output for generated long-form scripts',
   'Fair Housing guardrails included',
 ];
 
 const PRO_FEATURES = [
   '15 long-form scripts per month',
   'All 3 content lines (Market, Buyer, Seller)',
-  'Complete 9-part package on every script',
+  'Complete 9-part package on every long-form script',
   'B-roll / shot list for your shoot day',
   'Retention notes & on-screen text',
-  'Paste MLS data → spoken market script',
+  'Paste MLS data → spoken long-form market script',
   'Advanced hook library & tone controls',
   'Priority compliance screening',
   'Cancel anytime',

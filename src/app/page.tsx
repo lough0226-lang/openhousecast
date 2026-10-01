@@ -5,6 +5,7 @@ import {
   Shield,
   ArrowRight,
   Play,
+  Video,
   FileText,
   ListChecks,
   CalendarClock,
@@ -23,7 +24,7 @@ const BENEFITS = [
   {
     icon: LayoutTemplate,
     title: 'Real-estate-native long-form frameworks',
-    body: 'Not a generic blog post dressed as a video. OpenHouseCast structures scripts the way top listing agents actually speak — a proven long-form arc built for watch-time.',
+    body: 'Focused exclusively on 5–15 minute long-form videos, not short clips. OpenHouseCast structures scripts the way top listing agents actually speak — a proven long-form arc built for watch-time, never a generic blog post dressed as a video.',
     tag: 'Frameworks',
   },
   {
@@ -191,6 +192,14 @@ export default function HomePage() {
                 long-form YouTube scripts that buyers and sellers actually
                 watch — with real-estate-specific structure, retention hooks,
                 and Fair Housing-safe guardrails built into every output.
+                Designed exclusively for 5–15 minute long-form YouTube videos.
+              </p>
+              <p className="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-evergreen">
+                <span className="grid size-6 shrink-0 place-items-center rounded-full bg-amber/20 text-amber-dark">
+                  <Video className="size-3.5" strokeWidth={2.2} />
+                </span>
+                Not for 15-second clips — we craft complete long-form video
+                scripts.
               </p>
               <div className="mt-8 flex flex-wrap items-center gap-3">
                 <Button asChild variant="amber" size="lg" className="px-7 text-[15px] font-semibold">

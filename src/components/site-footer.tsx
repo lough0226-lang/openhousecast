@@ -37,9 +37,10 @@ export function SiteFooter() {
           <div className="md:col-span-2">
             <Logo light />
             <p className="mt-4 max-w-xs text-sm leading-relaxed text-paper/60">
-              AI YouTube scripts built for real estate — real-estate-specific
-              frameworks, retention hooks, shot lists, and Fair Housing-safe
-              guardrails in every output.
+              AI long-form YouTube scripts built for real estate —
+              real-estate-specific frameworks, retention hooks, shot lists,
+              and Fair Housing-safe guardrails in every output. Exclusively for
+              5–15 minute videos, never short clips.
             </p>
           </div>
           {COLUMNS.map((col) => (

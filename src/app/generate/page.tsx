@@ -17,6 +17,7 @@ import {
   AlignLeft,
   Tag,
   Wand2,
+  Video,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { SiteHeader } from '@/components/site-header';
@@ -246,6 +247,13 @@ export default function GeneratePage() {
               9-part long-form script — Fair Housing compliant and ready to
               shoot.
             </p>
+            <p className="mt-3 inline-flex items-center gap-2 text-sm font-semibold text-evergreen">
+              <span className="grid size-6 shrink-0 place-items-center rounded-full bg-amber/20 text-amber-dark">
+                <Video className="size-3.5" strokeWidth={2.2} />
+              </span>
+              This tool is built exclusively for 5–15 minute long-form YouTube
+              videos. Not for Shorts or short clips.
+            </p>
           </div>
         </div>
 
@@ -434,7 +442,7 @@ export default function GeneratePage() {
               )}
             </Button>
             <p className="mt-2 text-center text-xs text-clay">
-              Free plan preview · 2 scripts/mo on Free, 15 on Pro
+              Free plan preview · 2 long-form scripts/mo on Free, 15 on Pro
             </p>
           </div>
 

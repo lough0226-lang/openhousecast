@@ -23,7 +23,7 @@ export const metadata: Metadata = {
     'OpenHouseCast turns your market data and local expertise into long-form YouTube scripts real estate buyers and sellers actually watch — with real-estate-specific structure, retention hooks, and Fair Housing-safe guardrails built in.',
   keywords: [
     'real estate youtube',
-    'ai script generator',
+    'ai long-form script generator',
     'real estate agent content',
     'market update video',
     'buyer education video',
