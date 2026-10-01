@@ -44,14 +44,19 @@ function withCanonicalHost(req: NextRequest): NextRequest {
   const hostname = canonicalHost.replace(/:\d+$/, '').replace(/^\[|\]$/g, '');
   const isLocal = LOCAL_HOSTS.has(hostname);
 
-  // Some gateways (Tengine/Envoy in front of the prod site) terminate TLS but
-  // emit `x-forwarded-proto: http` (or omit the header entirely), and Google
-  // OAuth rejects non-https redirect URIs. For a public, non-local host we
-  // therefore always use https and never let an injected "http" downgrade it.
-  // Plain http is retained only for local development (localhost / loopback).
-  const scheme = isLocal
-    ? firstHeaderValue(req, 'x-forwarded-proto') ?? 'http'
-    : 'https';
+  // Coze's production gateway always terminates TLS behind an https origin.
+  // Scheme resolution:
+  //   1. An explicit `x-forwarded-proto: https` always wins (coverage for the
+  //      case where the proxied host may otherwise look internal/local).
+  //   2. Otherwise, any public (non-local) host is forced to https — Google
+  //      OAuth rejects non-https callback URLs, and some gateways
+  //      (Tengine/Envoy) omit `x-forwarded-proto` or emit `http` after
+  //      terminating TLS, so we never trust a downgrade for a public origin.
+  //   3. Only a local dev origin (localhost / loopback) with no https signal
+  //      keeps plain http.
+  const forwardedProto = firstHeaderValue(req, 'x-forwarded-proto');
+  const scheme =
+    forwardedProto === 'https' || !isLocal ? 'https' : 'http';
 
   let origin: string;
   try {
