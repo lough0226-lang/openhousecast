@@ -73,7 +73,7 @@ export function SiteHeader({ light = false }: { light?: boolean }) {
 
         <div className="hidden items-center gap-2 md:flex">
           <Button asChild variant="ghost" className="font-medium">
-            <Link href="/generate">Log in</Link>
+            <Link href="/auth/login">Log in</Link>
           </Button>
           <Button asChild variant="amber" size="lg" className="font-semibold">
             <Link href="/generate">Get started</Link>
@@ -120,7 +120,7 @@ export function SiteHeader({ light = false }: { light?: boolean }) {
             ))}
             <div className="mt-3 flex flex-col gap-2">
               <Button asChild variant="ghost" onClick={() => setOpen(false)}>
-                <Link href="/generate">Log in</Link>
+                <Link href="/auth/login">Log in</Link>
               </Button>
               <Button asChild variant="amber" onClick={() => setOpen(false)}>
                 <Link href="/generate">Get started</Link>
