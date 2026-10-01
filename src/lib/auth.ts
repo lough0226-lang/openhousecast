@@ -64,4 +64,12 @@ export const authConfig: NextAuthConfig = {
   },
 };
 
+// Never trust a platform-injected absolute AUTH_URL / NEXTAUTH_URL: a stale
+// value (e.g. a dev preview domain) would make the sign-in, callback, and OAuth
+// redirect URLs point at the wrong host. Remove them before initializing
+// NextAuth so that, with `trustHost: true`, the canonical base URL is derived
+// from the incoming request's `x-forwarded-host` / `host` header on every call.
+delete process.env.AUTH_URL;
+delete process.env.NEXTAUTH_URL;
+
 export const { handlers, auth, signIn, signOut } = NextAuth(authConfig);
