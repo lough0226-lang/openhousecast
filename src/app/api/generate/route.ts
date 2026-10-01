@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { generateScript, type GeneratorInput } from '@/lib/generator';
+import type { GeneratorInput } from '@/lib/generator';
+import { generateWithLLM } from '@/lib/openai';
 
 export const runtime = 'nodejs';
 
@@ -30,7 +31,7 @@ export async function POST(request: NextRequest) {
       tone: body.tone,
     };
 
-    const script = generateScript(input);
+    const script = await generateWithLLM(input);
 
     return NextResponse.json({ success: true, script });
   } catch (err) {
