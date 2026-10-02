@@ -6,6 +6,11 @@ const nextConfig: NextConfig = {
   // 显式将 tracing 根指向项目根，保证 standalone 入口稳定生成在
   // .next/standalone/server.js（避免被上层工作区目录结构嵌套）。
   outputFileTracingRoot: path.resolve(process.cwd()),
+  // Ensure the Prisma schema is included in the standalone output so that
+  // `prisma db push` / `prisma generate` can locate it at container startup.
+  outputFileTracingIncludes: {
+    '/**': ['./prisma/**/*'],
+  },
   /* config options here */
   serverExternalPackages: ['coze-coding-dev-sdk'],
   webpack: (config, { dev }) => {

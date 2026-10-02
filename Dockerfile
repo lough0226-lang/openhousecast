@@ -35,5 +35,14 @@ COPY --from=builder /app/.next/standalone ./
 COPY --from=builder /app/.next/static ./.next/static
 # public assets
 COPY --from=builder /app/public ./public
+# Prisma schema (needed by `prisma db push` at startup)
+COPY --from=builder /app/prisma ./prisma
+# Install the Prisma CLI at runtime. The CLI is a devDependency and is therefore
+# not part of the standalone node_modules; installing it here (via the bundled
+# npm) gives a working `npx prisma` independent of pnpm symlinks.
+RUN npm install --no-save prisma@6.19.3
+# Container entrypoint: runs `prisma db push` then starts the server
+COPY --from=builder /app/docker-entrypoint.sh ./docker-entrypoint.sh
+RUN chmod +x ./docker-entrypoint.sh
 EXPOSE 8080
-CMD ["node", "server.js"]
+ENTRYPOINT ["./docker-entrypoint.sh"]
