@@ -9,7 +9,10 @@ RUN pnpm install --frozen-lockfile || pnpm install --no-frozen-lockfile
 # ---- build stage ----
 FROM node:22-bookworm-slim AS builder
 RUN corepack enable
-# Debian slim ships glibc + openssl(3) — required by Prisma query engines
+# Install OpenSSL 3 + CA certs so Prisma can detect the real libssl version while
+# generating the client (the slim image ships neither `openssl` nor libssl3, so
+# Prisma would otherwise default to the wrong "openssl-1.1.x" engine variant).
+RUN apt-get update && apt-get install -y --no-install-recommends openssl ca-certificates && rm -rf /var/lib/apt/lists/*
 WORKDIR /app
 ENV NEXT_TELEMETRY_DISABLED=1
 COPY --from=deps /app/node_modules ./node_modules
@@ -20,7 +23,11 @@ RUN pnpm next build --webpack
 
 # ---- runtime stage ----
 FROM node:22-bookworm-slim AS runner
-# Debian slim includes glibc + openssl 3 that Prisma query engines need at runtime
+# Install OpenSSL 3 + CA certs at runtime: Prisma query engines (both the CLI
+# used by `npx prisma db push` and the @prisma/client library engine) need the
+# matching libssl. Without it Prisma warns "failed to detect libssl" and falls
+# back to openssl-1.1.x, which the slim image cannot satisfy at runtime.
+RUN apt-get update && apt-get install -y --no-install-recommends openssl ca-certificates && rm -rf /var/lib/apt/lists/*
 WORKDIR /app
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
