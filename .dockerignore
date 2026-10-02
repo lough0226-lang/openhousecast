@@ -1,0 +1,16 @@
+node_modules
+.next
+dist
+.git
+.gitignore
+*.log
+.env
+.env.*
+!.env.example
+Dockerfile
+.dockerignore
+coverage
+.Ver
+.vercel
+pnpm-debug.log*
+next-env.d.ts
