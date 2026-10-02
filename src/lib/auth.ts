@@ -32,6 +32,18 @@ export const authConfig: NextAuthConfig = {
   // Derive the canonical host from the incoming request so OAuth callback
   // URLs match the public domain behind the proxy.
   trustHost: true,
+  /**
+   * Pin the cookie scheme to a single value instead of letting Auth.js infer
+   * it from each request's URL protocol. The inferred value differs between:
+   *   - OAuth callback/`signOut` routes (rewritten to https by withCanonicalHost)
+   *   - server-side `auth()` in pages / route handlers (internal host, http)
+   * That mismatch made the `__Secure-` cookie prefix inconsistent — a session
+   * written with one prefix could not be read / cleared from contexts that
+   * inferred the other, producing the "bounced back to login right after
+   * signing in" and "still logged in after sign out" symptoms.
+   * Production is always HTTPS; local dev is plain http.
+   */
+  useSecureCookies: process.env.COZE_PROJECT_ENV !== 'DEV',
   // Persistent sessions stored in the database.
   session: { strategy: 'database' },
   pages: {
